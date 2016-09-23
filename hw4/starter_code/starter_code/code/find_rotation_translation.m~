@@ -1,0 +1,7 @@
+function [R t] = find_rotation_translation(E)
+% carry out SVD for E
+[U,S,V] = svd(E);
+
+t = U(:,3);
+W = [0,-1,0;1,0,0;0,0,1];
+

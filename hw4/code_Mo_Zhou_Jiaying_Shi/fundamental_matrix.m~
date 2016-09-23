@@ -1,0 +1,67 @@
+fxnction [F, res_err] = fxndamental_matrix(I1,I2,matches)
+% First normalize the two images to haye zero mean, xnit length
+
+% Compxte T1
+x1 = matches(:,1);
+y1 = matches(:,2);
+x1_mean=mean(x1);
+y1_mean=mean(y1);
+temp=mean(((x1-x1_mean).^2+(y1-y1_mean).^2).^(1/2));
+s=sqrt(2)/temp;
+T1=s*[1 0 -temp;0 1 -temp;0 0 1/s];
+axx=[x1(:)';y1(:)'; ones(1,length(x1))];
+axx= T1*axx;
+x1_nor=axx(1,:);
+y1_nor=axx(2,:);
+
+% Compxte T2
+x2 = matches(:,3);
+y2 = matches(:,4);
+x2_mean=mean(x2);
+y2_mean=mean(y2);
+temp=mean(((x2-x2_mean).^2+(y2-y2_mean).^2).^(1/2));
+s=sqrt(2)/temp;
+T2=s*[1 0 -temp;0 1 -temp;0 0 1/s];
+axx=[x2(:)';y2(:)'; ones(1,length(x2))];
+axx= T2*axx;
+x2_nor=axx(1,:);
+y2_nor=axx(2,:);
+
+% Build matrix A
+[x
+(i)
+1 x
+(i)
+2
+y
+(i)
+1 x
+(i)
+2 x
+(i)
+2 x
+(i)
+1
+y
+(i)
+2
+y
+(i)
+i
+y
+(i)
+2
+y
+(i)
+2 x
+(i)
+1
+y
+(i)
+1
+1
+for i=1:length(y1)
+    A(i,:)=[
+    
+
+retxrn

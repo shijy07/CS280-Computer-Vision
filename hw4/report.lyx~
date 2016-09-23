@@ -1,0 +1,641 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation 0bp
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+CS 280 HW4
+\end_layout
+
+\begin_layout Author
+Jiaying Shi (24978491), Mo Zhou (21242515)
+\end_layout
+
+\begin_layout Part*
+Part 1.
+\end_layout
+
+\begin_layout Standard
+We calculated F using the Eight-Point Algorithm.
+ Given pairs of matches, we first normalized the points for each image,
+ i.e.
+ the mean of the points is at origin and the mean distance from the origin
+ is 
+\begin_inset Formula $\sqrt{2}$
+\end_inset
+
+, store the two linear transformations by matrices 
+\begin_inset Formula $T_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $T_{2}$
+\end_inset
+
+ respectively.
+ Then we build matrix A and find its SVD.
+ Note that the vector in V corresponding to the smallest value in S is f.
+ Reshape the vector f into a 3-by-3 matrix 
+\begin_inset Formula $F'$
+\end_inset
+
+.
+ Next we force 
+\begin_inset Formula $F'$
+\end_inset
+
+ to have rank 2 by finding its SVD, setting the bottomright element to be
+ 0 and compute back 
+\begin_inset Formula $F''$
+\end_inset
+
+.
+ At last, we can denormalize the matrix 
+\begin_inset Formula $F''$
+\end_inset
+
+ to obtain the fundamental matrix 
+\begin_inset Formula $F$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For the 'house' images:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F=\left[\begin{array}{ccc}
+0 & 0 & 0.0003\\
+0 & 0 & -0.0114\\
+-0.0002 & 0.0105 & -0.0132
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and the residual is 0.004661.
+\end_layout
+
+\begin_layout Standard
+For the 'library' images:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F=\left[\begin{array}{ccc}
+0 & 0 & -0.0003\\
+0 & 0 & 0.0085\\
+0.0012 & -0.0078 & -0.1986
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and the residual is 0.103323.
+\end_layout
+
+\begin_layout Standard
+Also note that the normalized 8-point algorithm is not directly optimizing
+ the residual when solving the homogeneous system using SVD.
+ We can think of the objective as minimizing the absolute distance between
+ one point and its corresponding epipolar line with a rank 2 constraint.
+\end_layout
+
+\begin_layout Part*
+Part 2.
+\end_layout
+
+\begin_layout Standard
+Since the sign of R and t are all possible.
+ The R matrices are chosen so that the determinant is 1.
+ Notice also 
+\begin_inset Formula $t$
+\end_inset
+
+ is just the direction of translation.
+ Hence in the implementation, we choose a wide range of multipliers for
+ 
+\begin_inset Formula $t$
+\end_inset
+
+from 
+\begin_inset Formula $0-400$
+\end_inset
+
+ with step size 2.
+ 
+\end_layout
+
+\begin_layout Standard
+For the 'house' images: we denote by 
+\begin_inset Formula $H=\left[R|t\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H_{1}=\left[\begin{array}{cccc}
+0.9894 & 0.0236 & -0.1431 & -0.9997\\
+0.0255 & -0.9996 & 0.0112 & 0.0226\\
+-0.1428 & -0.0147 & -0.9896 & -0.0039
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H_{2}=\left[\begin{array}{cccc}
+0.9894 & 0.0236 & -0.1431 & 0.9997\\
+0.0255 & -0.9996 & 0.0112 & -0.0226\\
+-0.1428 & -0.0147 & -0.9896 & 0.0039
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H_{3}=\left[\begin{array}{cccc}
+0.9861 & 0.0686 & -0.1511 & -0.9997\\
+-0.0701 & 0.9975 & -0.0045 & 0.0226\\
+0.1505 & 0.1505 & 0.9885 & -0.0039
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H_{4}=\left[\begin{array}{cccc}
+0.9861 & 0.0686 & -0.1511 & 0.9997\\
+-0.0701 & 0.9975 & -0.0045 & -0.0226\\
+0.1505 & 0.1505 & 0.9885 & 0.0039
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the 'library' images:
+\begin_inset Formula 
+\[
+H_{1}=\left[\begin{array}{cccc}
+0.7080 & -0.0733 & -0.7024 & 0.9598\\
+0.0706 & -0.9970 & 0.0329 & -0.0607\\
+-0.7027 & 0.0263 & -0.7110 & -0.2740
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H_{2}=\left[\begin{array}{cccc}
+-0.7080 & 0.0733 & 0.7024 & 0.9598\\
+-0.0706 & 0.9970 & -0.0329 & -0.0607\\
+0.7027 & -0.0263 & 0.7110 & -0.2740
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H_{3}=\left[\begin{array}{cccc}
+0.9743 & 0.0407 & -0.2215 & -0.9598\\
+-0.0359 & 0.9990 & 0.0256 & 0.0607\\
+0.2224 & -0.0170 & 0.9748 & 0.2740
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H_{4}=\left[\begin{array}{cccc}
+0.9743 & 0.0407 & -0.2215 & 0.9598\\
+-0.0359 & 0.9990 & 0.0256 & -0.0607\\
+0.2224 & -0.0170 & 0.9748 & -0.2740
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part*
+Part 3.
+ 
+\end_layout
+
+\begin_layout Standard
+We have a 2 equations for a point in image 1 
+\begin_inset Formula 
+\[
+x_{n}^{1}\left(P_{31}^{1}X_{n}+P_{32}^{1}Y_{n}+P_{33}^{1}Z_{n}+P_{34}^{1}W_{n}\right)=P_{11}^{1}X_{n}+P_{12}^{1}Y_{n}+P_{13}^{1}Z_{n}+P_{14}^{1}W_{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{n}^{1}\left(P_{31}^{1}X_{n}+P_{32}^{1}Y_{n}+P_{33}^{1}Z_{n}+P_{34}^{1}W_{n}\right)=P_{21}^{1}X_{n}+P_{22}^{1}Y_{n}+P_{23}^{1}Z_{n}+P_{24}^{1}W_{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a point in image 2:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x_{n}^{2}\left(P_{31}^{2}X_{n}+P_{32}^{2}Y_{n}+P_{33}^{2}Z_{n}+P_{34}^{2}W_{n}\right)=P_{11}^{2}X_{n}+P_{12}^{2}Y_{n}+P_{13}^{2}Z_{n}+P_{14}^{2}W_{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{n}^{2}\left(P_{31}^{2}X_{n}+P_{32}^{2}Y_{n}+P_{33}^{2}Z_{n}+P_{34}^{2}W_{n}\right)=P_{21}^{2}X_{n}+P_{22}^{2}Y_{n}+P_{23}^{2}Z_{n}+P_{24}^{2}W_{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For each point, we have 4 equations to solve for 3 variables.
+ The equation in matrix forms is 
+\begin_inset Formula 
+\[
+A\mathbf{X}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula 
+\[
+A=\left[\begin{array}{ccc}
+x_{n}^{1}P_{31}^{1}-P_{11}^{1}\  & x_{n}^{1}P_{32}^{1}-P_{12}^{1}\  & x_{n}^{1}P_{33}^{1}-P_{13}^{1}\ \\
+y{}_{n}^{1}P_{31}^{1}-P_{21}^{1}\  & y_{n}^{1}P_{32}^{1}-P_{22\ }^{1} & y_{n}^{1}P_{33}^{1}-P_{23}^{1}\ \\
+x_{n}^{2}P_{31}^{2}-P_{11}^{2}\  & x_{n}^{2}P_{32}^{2}-P_{12\ }^{2} & x_{n}^{2}P_{33}^{2}-P_{13}^{2}\ \\
+y{}_{n}^{2}P_{31}^{2}-P_{21}^{2}\  & y_{n}^{2}P_{32}^{2}-P_{22}^{2}\  & y_{n}^{2}P_{33}^{2}-P_{23}^{2}\ 
+\end{array}\begin{array}{c}
+x_{n}^{1}P_{34}^{1}-P_{14}^{1}\\
+y_{n}^{1}P_{34}^{1}-P_{24}^{1}\\
+x_{n}^{2}P_{34}^{2}-P_{11}^{2}\\
+y_{n}^{1}P_{34}^{2}-P_{24}^{2}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Applying SVD decomposition, we have 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+ is corresponding of 
+\begin_inset Formula $V$
+\end_inset
+
+ with respect to the smallest singular value.
+\end_layout
+
+\begin_layout Standard
+The reconstruction error of points is 
+\begin_inset Formula 
+\[
+rec\_err=\frac{1}{2N}\sum_{n=1}^{N}(\left\Vert x_{n}^{1}-P^{1}X_{n}\right\Vert _{2}+\left\Vert x_{n}^{2}-P^{2}X_{n}\right\Vert _{2})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $x_{n}^{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{n}^{2}$
+\end_inset
+
+are points from image 1 and image 2 and is the vector for points in 3D.
+\end_layout
+
+\begin_layout Standard
+The recconstrunction error of the images with label 
+\begin_inset Quotes eld
+\end_inset
+
+house
+\begin_inset Quotes erd
+\end_inset
+
+ is 0.373145 when we set the norm of vector 
+\begin_inset Formula $t$
+\end_inset
+
+ of image 2 to be between 200 and 240.
+ 
+\end_layout
+
+\begin_layout Standard
+The recconstrunction error of the images with label 
+\begin_inset Quotes eld
+\end_inset
+
+library
+\begin_inset Quotes erd
+\end_inset
+
+ is 13.231305 when we set the norm of vector 
+\begin_inset Formula $t$
+\end_inset
+
+ of image 2 to be between 2200 and 2400.
+ 
+\end_layout
+
+\begin_layout Standard
+The scale of the the images of the library is larger than the scale of the
+ images with label 
+\begin_inset Quotes eld
+\end_inset
+
+house
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Part*
+Part 4.
+\end_layout
+
+\begin_layout Standard
+In the 3d plot results, symbol '*' reopresent the center of the camera 1
+ and symbol '+' represnet the center of the second image.
+ The remaining points are points from the photos.
+\end_layout
+
+\begin_layout Standard
+The matches of image 
+\begin_inset Quotes eld
+\end_inset
+
+house
+\begin_inset Quotes erd
+\end_inset
+
+ is shown as below:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename house.JPG
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 3d reconstruction results are shown in the following 3 photos:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename house1.JPG
+	scale 40
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename house2.JPG
+	scale 40
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename house3.JPG
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the results we can see that the polt can reflect the fact of the scene.
+ From the first view, we see that points are taken from two perpendicular
+ surfaces.
+ 
+\end_layout
+
+\begin_layout Standard
+The matches of image 
+\begin_inset Quotes eld
+\end_inset
+
+library
+\begin_inset Quotes erd
+\end_inset
+
+ is shown as below:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename lib.JPG
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 3d reconstruction results are shown in the following 3 photos:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename lib1.JPG
+	scale 40
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename lib2.JPG
+	scale 40
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename lib3.JPG
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Form the points we can see that most of the lines are from one surface of
+ the building.
+\end_layout
+
+\end_body
+\end_document
